@@ -1,0 +1,35 @@
+doctype html
+html
+    head
+    body
+        script(src='update.js')
+        if user
+            form(method="post" action="/logout")
+                <a href='/'>Logout</a>
+                
+            <p>Add an item</p>
+            form(method='POST' action='/home')
+                <input type='text' name='list_item'> </input>
+                <input type='submit' value='Add Item'></input>
+
+            //- for crossing out items
+            <input type='button' value='Cross Out Selected Items' onClick='crossOff()'></input>
+
+            //- </br></br>
+
+            //- for deleting items
+            <input type='button' value='Delete Selected Items' onClick='deletePost()'></input>
+            
+            <h3>Your Todo List:</h3>
+            -for(item of posts){
+                <span class="todo-list">
+                    <input type="checkbox" id="#{item.id}">#{item.post}</input>
+                    </br>    
+                </span>
+            -} 
+
+        else
+            <h1><a href='/'>Login or signup first to view this page</a></h1>
+
+
+        
