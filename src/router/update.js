@@ -27,18 +27,31 @@ module.exports = (app, db) => {
         res.status(200).send();
     })
 
+    updateDb = (value, item) => {
+        db.run(`UPDATE posts SET finished = ? WHERE id ="${item}"`, [value] , (err, row) => {
+            if(err){
+                console.log(err);
+            }else{
+                console.log("updated successfully");
+            }
+        });
+
+
+    }
+
     //cross off items
     app.post('/mark', (req, res) => {
         console.log("routed to mark");
         for(item of req.body){
             console.log(item);
-            db.run(`UPDATE posts SET finished = ? WHERE id ="${item}"`, [1] , (err, row) => {
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log("updated successfully");
-                }
-            });
+            (function (item) {
+                db.get(`SELECT * FROM posts WHERE id = "${item}"`, (err, row) => {
+                    if(row.finished) updateDb(0, item)
+                    else updateDb(1, item)
+                    
+                })
+            })(item)
+                
         }
         res.status(200).send();
     })
