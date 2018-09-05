@@ -1,4 +1,4 @@
-module.exports = (app, db) =>{    
+module.exports = (app, db) => {
     const session = require('express-session');
     const cookies = require('cookies');
 
@@ -9,40 +9,6 @@ module.exports = (app, db) =>{
         saveUninitialized: true,
         cookie: { secure: false },
     }))
-
-    app.get('/', (req, res) => {
-        console.log(req.session.user + "ffff");
-        if(req.session.user){
-            console.log("wait");
-            res.redirect('/home');
-        }else{
-            res.render('index');
-        }
-    })
-
-    app.get('/home', (req, res) =>{
-        //retrieve posts and let user view
-        db.all(`SELECT * FROM posts WHERE username = "${req.session.user}"` , (err, row) =>{
-            if(err){
-                console.log(err);
-            }else{
-                res.render('home', {posts: row, user: req.session.user})
-            }
-        })
-    })
-
-    //creating a todo list item
-    app.post('/home', (req, res) => {
-        db.run(`INSERT INTO posts(post, username) VALUES(?, ?)`, [req.body.list_item, req.session.user], (err) => {
-            if(err){
-                console.log(err);
-                console.log("There was an error creating the post");
-            }else{
-                console.log("Successfully created blog post for user: " + req.session.user);
-            }
-            res.redirect('home');
-        });
-    })
 
     //login
     app.post('/', (req, res)=>{
@@ -56,13 +22,8 @@ module.exports = (app, db) =>{
             }
         })
     })
-    
 
-
-    app.get('/signup', (req, res) => {
-        res.render('signup');
-    })
-
+    //signup
     app.post('/signup', (req, res) => {
         //insert inputted username into database(first check if user exists)
         db.get(`SELECT * FROM users WHERE username = "${req.body.userSignup}"`, (err, row) => {
@@ -79,9 +40,9 @@ module.exports = (app, db) =>{
         })
     })
 
+    //logout
     app.post('/logout', (req, res) => {
         req.session.user = undefined;
-        res.redirect('home');
+        res.redirect('/');
     })
-    
 }

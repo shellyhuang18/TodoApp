@@ -5,27 +5,35 @@ html
         script(src='update.js')
         if user
             form(method="post" action="/logout")
-                <a href='/'>Logout</a>
-                
+                <button> Logout</button>                
             <p>Add an item</p>
             form(method='POST' action='/home')
                 <input type='text' name='list_item'> </input>
                 <input type='submit' value='Add Item'></input>
 
-            //- for crossing out items
-            <input type='button' value='Cross Out Selected Items' onClick='crossOff()'></input>
+            </br>
 
-            //- </br></br>
+            //- for crossing out items
+            <input type='button' value='Finish Selected Items' onClick='update("mark")'></input>
+
+            </br>
 
             //- for deleting items
-            <input type='button' value='Delete Selected Items' onClick='deletePost()'></input>
+            <input type='button' value='Delete Selected Items' onClick='update("delete")'></input>
             
             <h3>Your Todo List:</h3>
             -for(item of posts){
-                <span class="todo-list">
-                    <input type="checkbox" id="#{item.id}">#{item.post}</input>
-                    </br>    
-                </span>
+                //- if item finished, cross out 
+                if item.finished
+                    <span class="todo-list" style="text-decoration-line: line-through;">
+                        <input type="checkbox" id="#{item.id}">#{item.post}</input>
+                    </span>
+                else
+                    <span class="todo-list">
+                        <input type="checkbox" id="#{item.id}">#{item.post}</input>
+                    </span>
+
+                </br>   
             -} 
 
         else
